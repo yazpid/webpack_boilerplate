@@ -1,6 +1,7 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var path = require("path");
+var webpack = require('webpack');
 
 module.exports = {
     entry: './src/app.js',
@@ -18,7 +19,25 @@ module.exports = {
                     publicPath: '/dist'
                 })
             },
-            { test: /\.css$/, use: [ 'style-loader', 'css-loader' ] }
+            { test: /\.css$/, use: [ 'style-loader', 'css-loader' ] },
+            {
+                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                use: [
+                    {
+                        loader: 'url-loader',
+                        options: {
+                            limit: 10000,
+                            mimetype: 'application/font-woff'
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                use: [
+                    { loader: 'file-loader' }
+                ]
+            }
         ]
     },
     devServer: {
@@ -40,6 +59,14 @@ module.exports = {
             filename: 'app.css',
             disable: false,
             allChunks: true
+        }),
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jquery: "jquery",
+            "window.jQuery": "jquery",
+            jQuery:"jquery",
+            "window.Tether" : "tether",
+            "Tether" : "tether"
         })
     ]
 }
